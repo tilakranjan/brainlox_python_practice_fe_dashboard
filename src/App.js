@@ -120,7 +120,11 @@ function App() {
         questionId: queId
       },
       url: URL + "/addQuestion"
-    }).then(alert("Question added successfully!!!"));
+    }).then(() => {
+      alert("Question added successfully!!!");
+      setPprId(-1);
+      setQueId(-1);
+    });
   }
 
   return (
@@ -148,15 +152,15 @@ function App() {
 
       {
         pmode === true ?
-          <div class="accordion accordion-flush" id="accordionFlushExample">
+          <div className="accordion accordion-flush" id="accordionFlushExample">
             {
               quesArr.map(m =>
                 <>
-                  <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-headingOne">
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="flush-headingOne">
                       <button
                         onClick={(e) => { setAccOpen(m._id); e.preventDefault() }}
-                        class="accordion-button collapsed"
+                        className="accordion-button collapsed"
                         type="button"
                         data-bs-toggle="show"
                         aria-expanded="false"
@@ -165,9 +169,9 @@ function App() {
                       </button>
                     </h2>
                     
-                    <div id={"flush-collapseOne"} class={"accordion-collapse collapse" + (m._id === accOpen ? "show" : "")} >
-                      <div class="accordion-body float-left">
-                        <p class='text-left prew'>
+                    <div id={"flush-collapseOne"} className={"accordion-collapse collapse" + (m._id === accOpen ? "show" : "")} >
+                      <div className="accordion-body float-left">
+                        <p className='text-left prew'>
                           <u>
                             Description: 
                           </u><br />
@@ -197,6 +201,7 @@ function App() {
               <label for="SetList">Choose a Set:</label>
               <select
                 value={pprId}
+                onChange={e => setPprId(e.target.value)}
                 name="SetList"
                 className="form-control w-100"
                 id="SetList"
@@ -212,6 +217,7 @@ function App() {
               <label for="QueList">Choose a Question:</label>
               <select
                 value={queId}
+                onChange={e => setQueId(e.target.value)}
                 name="QueList"
                 className="form-control w-100"
                 id="QueList"
