@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import {useState, useEffect} from 'react';
 import { useForm } from "react-hook-form";
@@ -7,6 +6,7 @@ import Input from './Input';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 function App() {
   const {
@@ -53,25 +53,55 @@ function App() {
     })
   }
    
-  const newSet =()=>{
-    var name = prompt("Enter Set name");
-    var type = prompt("Enter type of set (problem or workshop)");
-    var diff = prompt('Enter difficulty (Easy, Medium or Hard)');
-    if (name == null || diff == null || type == null) return;
+  const newSet = () => {
     
-    axios({
-      method: "post",
-      url: URL + "/addSet",
-      data: {
-        title: name,
-        type: type,
-        difficulty: diff,
-        status: "Locked"
+    Swal.fire({
+      title: 'Add a Set',
+      html: `<label for="name">Set Name</label> 
+      <input type="text" id="name" class="swal2-input" placeholder="Set Name">
+      <label for="type">Set Type</label> 
+      <select id="type" class="swal2-input">
+        <option value="problem">Problem</option>
+        <option value="workshop">Workshop</option>
+      </select> <br/>
+      <label for="diff">Set Difficulty</label>
+      <select id="diff" class="swal2-input">
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>`,
+      confirmButtonText: 'Add',
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        const name = Swal.getPopup().querySelector('#name').value
+        const type = Swal.getPopup().querySelector('#type').value
+        const diff = Swal.getPopup().querySelector('#diff').value
+        if (!name || !type || !diff) {
+          Swal.showValidationMessage(`Please enter all the details`)
+        }
+        return { name: name, type: type, diff: diff }
       }
-    }).then(e => {
-      setPprId(e.data);
-      paperLoad(e.data);
-    });
+    }).then((result) => {
+      axios({
+        method: "post",
+        url: URL + "/addSet",
+        data: {
+          title: result.value.name,
+          type: result.value.type,
+          difficulty: result.value.diff,
+          status: "Locked"
+        }
+      }).then(e => {
+        setPprId(e.data);
+        paperLoad(e.data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Set added successfully'
+        });
+      });
+    })
+    
   }
 
   const showAllQuestions = () => {
@@ -112,6 +142,7 @@ function App() {
         setQuesPprArr(response.data);
       });
   }
+
   const pushq = () => {
     axios({
       method: "POST",
@@ -129,82 +160,29 @@ function App() {
 
   return (
     <div className="App">
-      <label for="selectList">Choose a Set:</label>
-      <select
-        value={pprId}
-        onChange={(e) => paperLoad(e.target.value)}
-        name="selectList"
-        className="form-control w-100"
-        id="selectList"
-      >
-        <option value={-1}>Select a set</option>
-        {quesPprArr.map((m, i) => (
-          <>
-            <option value={m._id}>{m.title} - {m.type} set</option>
-          </>
-        ))}
-      </select>
-
-      <button className='btn btn-primary' onClick={showAllQuestions}>View All Questions</button>
-      <button className='btn btn-primary' onClick={newSet}>Add new set</button>
-      <button className='btn btn-primary' onClick  = {()=>setPmode(false)}>Add a question</button>
-      <button className='btn btn-primary' onClick={showAllSets}>Push Question To a Set</button>
-
+    
+      <div className='App-header'>
+        <h1> Dashboard </h1>
+      </div>
+      
+      <div className='navOptions'>
+        <button className='btn btn-primary' onClick={showAllQuestions}>View All Questions</button>
+        <button className='btn btn-primary' onClick={newSet}>Add new set</button>
+        <button className='btn btn-primary' onClick={() => { setPmode(false); setPushDb(false); }}>Add a question</button>
+        <button className='btn btn-primary' onClick={showAllSets}>Push Question To a Set</button>
+      </div>
+      
       {
         pmode === true ?
-          <div className="accordion accordion-flush" id="accordionFlushExample">
-            {
-              quesArr.map(m =>
-                <>
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="flush-headingOne">
-                      <button
-                        onClick={(e) => { setAccOpen(m._id); e.preventDefault() }}
-                        className="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="show"
-                        aria-expanded="false"
-                      >
-                        <strong>{m.title}</strong>
-                      </button>
-                    </h2>
-                    
-                    <div id={"flush-collapseOne"} className={"accordion-collapse collapse" + (m._id === accOpen ? "show" : "")} >
-                      <div className="accordion-body float-left">
-                        <p className='text-left prew'>
-                          <u>
-                            Description: 
-                          </u><br />
-                          {m.description}<br />
-                          <u>
-                            Input: 
-                          </u><br />
-                          {m.input}<br />
-                          <u>
-                            Output: 
-                          </u><br />
-                          {m.output}<br />
-                          <u>
-                            Solution: 
-                          </u><br />
-                          {m.sol}<br />
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )
-            }
-          </div> :
-          pushDb === true ?
-            <div>
-              <label for="SetList">Choose a Set:</label>
+          <div>
+            <div className='selectList'>
+              <label className='listLabel' for="selectList">Choose a Set</label>
               <select
                 value={pprId}
-                onChange={e => setPprId(e.target.value)}
-                name="SetList"
-                className="form-control w-100"
-                id="SetList"
+                onChange={(e) => paperLoad(e.target.value)}
+                name="selectList"
+                className="listOptions"
+                id="selectList"
               >
                 <option value={-1}>Select a set</option>
                 {quesPprArr.map((m, i) => (
@@ -213,29 +191,98 @@ function App() {
                   </>
                 ))}
               </select>
-            
-              <label for="QueList">Choose a Question:</label>
-              <select
-                value={queId}
-                onChange={e => setQueId(e.target.value)}
-                name="QueList"
-                className="form-control w-100"
-                id="QueList"
-              >
-                <option value={-1}>Select a question</option>
-                {quesArr.map((m, i) => (
-                  <>
-                    <option value={m._id}>{m.title}</option>
-                  </>
-                ))}
-              </select>
+            </div>
 
-              <button className='btn btn-primary w-25' onClick={pushq}>
+            <div className="accordion accordion-flush questionList" id="accordionFlushExample">
+              {
+                quesArr.map(m =>
+                  <>
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="flush-headingOne">
+                        <button
+                          onClick={(e) => { setAccOpen(m._id); e.preventDefault() }}
+                          className="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="show"
+                          aria-expanded="false"
+                        >
+                          <strong>{m.title}</strong>
+                        </button>
+                      </h2>
+                      
+                      <div id={"flush-collapseOne"} className={"question accordion-collapse collapse" + (m._id === accOpen ? "show" : "")} >
+                        <div className="accordion-body float-left">
+                          <p className='text-left prew'>
+                            <u>
+                              Description: 
+                            </u><br />
+                            {m.description}<br />
+                            <u>
+                              Input: 
+                            </u><br />
+                            {m.input}<br />
+                            <u>
+                              Output: 
+                            </u><br />
+                            {m.output}<br />
+                            <u>
+                              Solution: 
+                            </u><br />
+                            {m.sol}<br />
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )
+              }
+            </div>
+          </div>
+           :
+          pushDb === true ?
+            <div className='pushDB'>
+              <div className='list'>
+                <label className='inputLabel' for="SetList">Choose a Set</label>
+                <select
+                  value={pprId}
+                  onChange={e => setPprId(e.target.value)}
+                  name="SetList"
+                  className="inputOption"
+                  id="SetList"
+                >
+                  <option value={-1}>Select a set</option>
+                  {quesPprArr.map((m, i) => (
+                    <>
+                      <option value={m._id}>{m.title} - {m.type} set</option>
+                    </>
+                  ))}
+                </select>
+              </div>
+              
+              <div className='list'>
+                <label className='inputLabel' for="QueList">Choose a Question</label>
+                <select
+                  value={queId}
+                  onChange={e => setQueId(e.target.value)}
+                  name="QueList"
+                  className="inputOption"
+                  id="QueList"
+                >
+                  <option value={-1}>Select a question</option>
+                  {quesArr.map((m, i) => (
+                    <>
+                      <option value={m._id}>{m.title}</option>
+                    </>
+                  ))}
+                </select>
+              </div>
+
+              <button className='questionBtn' onClick={pushq}>
                   Add to Set
               </button>
             </div> :
             <form
-              className="form-group w-100  col-md-offset-6"
+              className="inputForm form-group col-md-offset-6"
               onSubmit={
                 handleSubmit(que => {
                   newQuestion(que);
@@ -247,21 +294,24 @@ function App() {
               <Input lbl="output" reg={register}></Input>
               <Input lbl="sol" reg={register}></Input>
               
-              <button
-                className='form-control btn btn-primary w-25'
-                type='submit'
-              >
-                Add
-              </button>
-              <button
-                className='form-control btn btn-primary w-25'
-                onClick={() => reset()}
-              >
-              Clear Form
-              </button>
-              <button className='form-control btn btn-danger w-25' onClick={() => setPmode(true)}>
-                Cancel
-              </button>
+              <div className='navOptions'>
+                <button
+                  className='questionBtn'
+                  type='submit'
+                >
+                  Add
+                </button>
+                <button
+                  className='questionBtn'
+                  onClick={() => reset()}
+                >
+                Clear Form
+                </button>
+                <button className='btn btn-danger questionBtn' onClick={() => setPmode(true)}>
+                  Cancel
+                </button>
+              </div>
+              
             </form>
       }
     </div>

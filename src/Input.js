@@ -4,15 +4,16 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 function Input({lbl,reg}) {
   return (
-    <div className='form-control w-50'>
-      <label>
-        {lbl}: <br />
-        <input
-          className="form-group w-100 center"
-          name={lbl}
-          {...reg(lbl, { required: true })}
-        ></input>
+    <div className='inputList'>
+      <label className='inputLabel'>
+        {lbl}
       </label>
+      <textarea
+        type="textarea"
+        className="inputOption"
+        name={lbl}
+        {...reg(lbl, { required: true })}
+      ></textarea>
     </div>
   );
 }
