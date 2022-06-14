@@ -24,7 +24,7 @@ function App() {
   const [pushDb, setPushDb] = useState(false);
   const [accOpen , setAccOpen]  = useState(-1);
 
-  const URL = "http://localhost:8080/python";
+  const URL = "http://localhost:8080/python/dashboard";
 
   useEffect(() => {
     var config = {
