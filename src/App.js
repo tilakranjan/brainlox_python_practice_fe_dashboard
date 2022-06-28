@@ -12,8 +12,7 @@ function App() {
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors },
+    reset
   } = useForm();
   
   const [quesPprArr,setQuesPprArr]  = useState([]);
@@ -24,7 +23,7 @@ function App() {
   const [pushDb, setPushDb] = useState(false);
   const [accOpen , setAccOpen]  = useState(-1);
 
-  const URL = "http://localhost:8080/python/dashboard";
+  const URL = "https://cryptic-crag-63552.herokuapp.com/python/dashboard";
 
   useEffect(() => {
     var config = {
@@ -185,7 +184,7 @@ function App() {
                 id="selectList"
               >
                 <option value={-1}>Select a set</option>
-                {quesPprArr.map((m, i) => (
+                {quesPprArr.map((m, _i) => (
                   <>
                     <option value={m._id}>{m.title} - {m.type} set</option>
                   </>
@@ -251,7 +250,7 @@ function App() {
                   id="SetList"
                 >
                   <option value={-1}>Select a set</option>
-                  {quesPprArr.map((m, i) => (
+                  {quesPprArr.map((m, _i) => (
                     <>
                       <option value={m._id}>{m.title} - {m.type} set</option>
                     </>
@@ -269,7 +268,7 @@ function App() {
                   id="QueList"
                 >
                   <option value={-1}>Select a question</option>
-                  {quesArr.map((m, i) => (
+                  {quesArr.map((m, _i) => (
                     <>
                       <option value={m._id}>{m.title}</option>
                     </>
