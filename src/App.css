@@ -2,41 +2,108 @@
   text-align: center;
 }
 
-.prew{
-  white-space: pre-wrap;
-  text-align: left;
-}
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  margin-bottom: 5vh;
 }
 
-.App-link {
-  color: #61dafb;
+.prew{
+  white-space: pre-wrap;
+  text-align: left;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navOptions{
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-bottom: 3vh;
 }
+
+.selectList {
+  max-width: 70%;
+  display: flex;
+  margin: 1% 30%;
+}
+
+.listLabel {
+  align-self: center;
+  font-size: 15px;
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+.listOptions {
+  margin: 0px 20px;
+  width: 75%;
+  height: 6vh;
+  border-radius: 15px;
+}
+
+.questionList{
+  padding: 40px 150px 50px 150px;
+}
+
+.question {
+  background-color: #dae5ea;
+}
+
+u{
+  font-weight: 700;
+}
+
+.inputForm {
+  max-width: 90%;
+  margin: 5% 10%;
+}
+
+.inputList {
+  max-width: 80%;
+  display: flex;
+  margin: 1% 10%;
+}
+
+.inputLabel {
+  flex: 0.2;
+  font-weight: 700;
+  font-size: large;
+  text-align: left;
+}
+
+.inputOption {
+  flex: 0.8;
+  height: 6vh;
+  border-radius: 2px;
+}
+
+.questionBtn {
+  width: 20%;
+  margin-top: 2%;
+  height: 6vh;
+  color: #fff;
+  background-color: #282c34;
+  border-color: #282c34;
+  border-radius: 5px;
+}
+
+.pushDB {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 85px 50px 85px;
+}
+
+.list{
+  width: 100%;
+  display: flex;
+  margin: 1% 5%;
+}
+
+
